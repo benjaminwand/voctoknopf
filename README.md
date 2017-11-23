@@ -1,3 +1,2 @@
-# voctoknopf
-
-Hardware UI für voctomix https://github.com/voc/voctomix
+StreamOn war noch nicht implementiert, ansonsten erfolgreich gegen den auf dem Geekend November 2017 im CCCB laufenden voctocore getestet.
+Die Telefonknöpfe habe ich mit doppelseitigem Klebeband an das Steckbrett geklebt, sonst sind sie immer raus gefallen.
