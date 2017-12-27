@@ -76,7 +76,7 @@ int lastButtonState_take = 0;
 int lastButtonState_stream = 0;
 
 String video_a = "slides";           // building blocks for take-message
-String video_b = "cam_1";
+String video_b = "cam1";
 String composite_mode = "side_by_side_preview";
 
 String stream_status;
