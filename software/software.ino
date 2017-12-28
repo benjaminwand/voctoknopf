@@ -33,10 +33,10 @@
 // pin mapping
 const int button_fullscreen = 22;
 const int led_fullscreen = 23;
-const int button_side_by_side_preview = 24;
-const int led_side_by_side_preview = 25;
-const int button_picture_in_picture = 26;
-const int led_picture_in_picture = 27;
+const int button_side_by_side_preview = 26;
+const int led_side_by_side_preview = 27;
+const int button_picture_in_picture = 24;
+const int led_picture_in_picture = 25;
 const int button_grabber_a = 28;    
 const int led_grabber_a = 29;    
 const int button_cam1_a = 30;
@@ -73,6 +73,8 @@ int lastButtonState_cam2_b = 0;
 int lastButtonState_cam3_b = 0;
 int lastButtonState_take = 0;
 int lastButtonState_stream = 0;
+
+int myTimeout = 0;  // milliseconds for Serial.readString
 
 String video_a = "grabber";           // building blocks for take-message
 String video_b = "cam1";
@@ -387,7 +389,7 @@ void loop() {
   }
   lastButtonState_stream = buttonState;  */
 
-    read_string = Serial.readString();        // get messages from voctocore
+  read_string = Serial.readString();        // get messages from voctocore
   if (read_string == "> stream_status live") {   
       digitalWrite(led_stream_red, LOW);
       digitalWrite(led_stream_green, HIGH);  
@@ -396,4 +398,5 @@ void loop() {
       digitalWrite(led_stream_red, HIGH);
       digitalWrite(led_stream_green, LOW);  
       }
+      
 }
