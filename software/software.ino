@@ -1,6 +1,5 @@
 /*
- TODO: Kommunikation mit dem Voctocore, Zeile 316
-       und Stream Status abfragen etc, Zeile 326 bis Ende
+ TODO: Kommunikation mit dem Voctocore, und Stream Status abfragen etc
  
   Hardware frontend for Voctomix
   https://github.com/voc/voctomix
@@ -80,6 +79,9 @@ String video_b = "cam1";
 String composite_mode = "side_by_side_preview";
 
 String stream_status;
+
+unsigned long previousMillis = 0;        // will store last time "get strem_status"
+const long interval = 1000;     // constants won't change:
 
 void setup() {
   
@@ -357,13 +359,18 @@ void loop() {
   }
   lastButtonState_take = buttonState; 
   //abfragen ob stream status geändert hat, dann LED LOW
-  /*
-  stream
-  stream_status =       ;   // muss noch gemacht werden !! 
-                            // < get_stream_status
-                            // Frage: wie oft kann man den Voctocore das fragen 
-                            // ohne dass er genervt ist?
-  if (stream_status == live) {   
+
+  //stream_on 
+
+   unsigned long currentMillis = millis();
+
+  if (currentMillis - previousMillis >= interval) { // save the last time you blinked the LED
+    previousMillis = currentMillis;
+    Serial.println("< get stream status");
+    }
+  
+  stream_status = Serial.read();
+  if (stream_status == "> stream_status live") {   
       digitalWrite(led_stream_red, LOW);
       digitalWrite(led_stream_green, HIGH);  
     } 
@@ -371,11 +378,11 @@ void loop() {
       digitalWrite(led_stream_red, HIGH);
       digitalWrite(led_stream_green, LOW);  
     }
-   
+    
     buttonState = digitalRead(button_stream);      //OnButtonPush
    if (buttonState != lastButtonState_stream) {     
     if (buttonState == HIGH) {   
-          if (stream_status == live) {       
+          if (stream_status == "> stream_status live") {       
               Serial.println("<set_stream_blank pause");
               digitalWrite(led_stream_red, HIGH);
               digitalWrite(led_stream_green, LOW);              
@@ -390,6 +397,5 @@ void loop() {
     }
     delay(1);                         
   }
-  lastButtonState_stream = buttonState; 
-*/
+  lastButtonState_stream = buttonState;  
 }
