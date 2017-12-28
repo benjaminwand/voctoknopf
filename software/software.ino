@@ -78,7 +78,7 @@ String video_a = "grabber";           // building blocks for take-message
 String video_b = "cam1";
 String composite_mode = "side_by_side_preview";
 
-String stream_status;
+String read_string;
 
 unsigned long previousMillis = 0;        // will store last time "get strem_status"
 const long interval = 1000;     // constants won't change:
@@ -152,6 +152,8 @@ keep some buttons illuminated:
   digitalWrite(led_cam3_b, LOW);
   digitalWrite(led_stream_red, LOW);
   digitalWrite(led_stream_green, LOW); 
+
+  Serial.println("< get stream status");    // Stream on?
   
 }
 
@@ -364,38 +366,34 @@ void loop() {
 
    unsigned long currentMillis = millis();
 
-  if (currentMillis - previousMillis >= interval) { // save the last time you blinked the LED
+  if (currentMillis - previousMillis >= interval) { // save the last time you asked
     previousMillis = currentMillis;
     Serial.println("< get stream status");
     }
-  
-  stream_status = Serial.read();
-  if (stream_status == "> stream_status live") {   
-      digitalWrite(led_stream_red, LOW);
-      digitalWrite(led_stream_green, HIGH);  
-    } 
-    else {
-      digitalWrite(led_stream_red, HIGH);
-      digitalWrite(led_stream_green, LOW);  
-    }
-    
+    /*
     buttonState = digitalRead(button_stream);      //OnButtonPush
    if (buttonState != lastButtonState_stream) {     
     if (buttonState == HIGH) {   
-          if (stream_status == "> stream_status live") {       
-              Serial.println("<set_stream_blank pause");
-              digitalWrite(led_stream_red, HIGH);
-              digitalWrite(led_stream_green, LOW);              
+          if (sread_string == "> stream_status live") {       
+              Serial.println("< set_stream_blank pause");           
               } 
           else {
-              Serial.println("set_stream_live");
-              digitalWrite(led_stream_red, LOW);
-              digitalWrite(led_stream_green, HIGH);
+              Serial.println("< set_stream_live");
             }                     
     } 
     else {
-    }
+    } 
     delay(1);                         
   }
-  lastButtonState_stream = buttonState;  
+  lastButtonState_stream = buttonState;  */
+
+    read_string = Serial.readString();        // get messages from voctocore
+  if (read_string == "> stream_status live") {   
+      digitalWrite(led_stream_red, LOW);
+      digitalWrite(led_stream_green, HIGH);  
+      }
+  if (read_string == "> stream_status blank pause") {
+      digitalWrite(led_stream_red, HIGH);
+      digitalWrite(led_stream_green, LOW);  
+      }
 }
