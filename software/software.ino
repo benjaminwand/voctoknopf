@@ -33,10 +33,10 @@
 // pin mapping
 const int button_fullscreen = 22;
 const int led_fullscreen = 23;
-const int button_side_by_side_preview = 26;
-const int led_side_by_side_preview = 27;
-const int button_picture_in_picture = 24;
-const int led_picture_in_picture = 25;
+const int button_side_by_side_preview = 24;
+const int led_side_by_side_preview = 25;
+const int button_picture_in_picture = 26;
+const int led_picture_in_picture = 27;
 const int button_grabber_a = 28;    
 const int led_grabber_a = 29;    
 const int button_cam1_a = 30;
