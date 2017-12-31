@@ -4,7 +4,8 @@
   Hardware frontend for Voctomix
   https://github.com/voc/voctomix
 
-  created 9 Nov 2017
+  created 9. Nov 2017
+  last changed 31. December 2017
 
   The circuit, several instances of:
   - pushbutton attached to pin from +5V
@@ -28,6 +29,9 @@
   
   With help from 
   http://www.arduino.cc/en/Tutorial/ButtonStateChange
+  and many friends
+
+  
 */
 
 // pin mapping
@@ -74,16 +78,11 @@ int lastButtonState_cam3_b = 0;
 int lastButtonState_take = 0;
 int lastButtonState_stream = 0;
 
-int myTimeout = 0;  // milliseconds for Serial.readString
-
 String video_a = "slides";           // building blocks for take-message
 String video_b = "cam1";
 String composite_mode = "side_by_side_preview";
 
 String read_string;
-
-unsigned long previousMillis = 0;        // will store last time "get strem_status"
-const long interval = 1000;     // constants won't change:
 
 void setup() {
   
@@ -120,6 +119,7 @@ void setup() {
   
   // initialize serial communication:
   Serial.begin(9600);
+  Serial.println("get_stream_status");    // Stream on?
 
   // test LEDs
   digitalWrite(led_fullscreen, HIGH);
@@ -154,9 +154,6 @@ keep some buttons illuminated:
   digitalWrite(led_cam3_b, LOW);
   digitalWrite(led_stream_red, LOW);
   digitalWrite(led_stream_green, LOW); 
-
-  Serial.println("< get stream status");    // Stream on?
-  
 }
 
 
@@ -353,8 +350,12 @@ void loop() {
   //take
    buttonState = digitalRead(button_take);        
   if (buttonState != lastButtonState_take) {     
-    if (buttonState == HIGH) {                                          
-      Serial.println("< set_videos_and_composite " + video_a + " " + video_b + " " + composite_mode); 
+    if (buttonState == HIGH) {
+           if(composite_mode == "fullscreen") {
+         Serial.println("set_videos_and_composite " + video_a + " * " + composite_mode);                                                 
+      } 
+      else
+      Serial.println("set_videos_and_composite " + video_a + " " + video_b + " " + composite_mode); 
       digitalWrite(led_take, HIGH);                        
     } 
     else {
@@ -362,41 +363,39 @@ void loop() {
     delay(1);                         
   }
   lastButtonState_take = buttonState; 
-  //abfragen ob stream status geändert hat, dann LED LOW
-
-  //stream_on 
-
-   unsigned long currentMillis = millis();
-
-  if (currentMillis - previousMillis >= interval) { // save the last time you asked
-    previousMillis = currentMillis;
-    Serial.println("< get stream status");
-    }
+  
+ 
+ //stream_on 
     /*
+  stream_status = Serial.read();      //abfragen ob stream status geändert hat, dann LED anpassen
+  if (stream_status == "stream_status live") {   
+      digitalWrite(led_stream_red, LOW);
+      digitalWrite(led_stream_green, HIGH);  
+    } 
+    else {
+      digitalWrite(led_stream_red, HIGH);
+      digitalWrite(led_stream_green, LOW);  
+    }
+    
     buttonState = digitalRead(button_stream);      //OnButtonPush
    if (buttonState != lastButtonState_stream) {     
     if (buttonState == HIGH) {   
-          if (sread_string == "> stream_status live") {       
-              Serial.println("< set_stream_blank pause");           
+          if (stream_status == "> stream_status live") {       
+              Serial.println("set_stream_blank pause");
+              digitalWrite(led_stream_red, HIGH);
+              digitalWrite(led_stream_green, LOW);              
               } 
           else {
-              Serial.println("< set_stream_live");
+              Serial.println("set_stream live");
+              digitalWrite(led_stream_red, LOW);
+              digitalWrite(led_stream_green, HIGH);
             }                     
     } 
     else {
-    } 
+    }
     delay(1);                         
   }
-  lastButtonState_stream = buttonState;  */
+  lastButtonState_stream = buttonState;  
+  */
 
-  read_string = Serial.readString();        // get messages from voctocore
-  if (read_string == "> stream_status live") {   
-      digitalWrite(led_stream_red, LOW);
-      digitalWrite(led_stream_green, HIGH);  
-      }
-  if (read_string == "> stream_status blank pause") {
-      digitalWrite(led_stream_red, HIGH);
-      digitalWrite(led_stream_green, LOW);  
-      }
-      
 }
